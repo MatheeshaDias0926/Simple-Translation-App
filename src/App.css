@@ -30,7 +30,7 @@ textarea[readonly] {
 }
 
 button {
-  background-color: #4caf50;
+  background-color: #1ca7e8;
   color: white;
   padding: 12px 24px;
   border: none;
@@ -42,7 +42,7 @@ button {
 }
 
 button:hover:not(:disabled) {
-  background-color: #45a049;
+  background-color: #0074aa;
   transform: translateY(-1px);
 }
 
