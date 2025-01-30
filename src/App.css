@@ -1,104 +1,123 @@
-.app {
-  text-align: center;
-  font-family: Arial, sans-serif;
-  padding: 20px;
-  max-width: 800px;
-  margin: 0 auto;
-}
+/* Add these to your existing App.css */
 
-textarea {
-  width: 90%;
-  height: 100px;
-  margin: 1rem 0;
-  padding: 10px;
+/* Language Selector */
+.language-selector select {
+  padding: 8px 12px;
   font-size: 16px;
-  border: 2px solid #ddd;
   border-radius: 4px;
-  resize: vertical;
+  background: #f8f8f8;
+  border: 1px solid #ddd;
+  margin: 10px 0;
 }
 
-textarea[readonly] {
-  background-color: #f5f5f5;
-  cursor: text;
-}
-
-.controls {
+/* Result Controls */
+.result-controls {
   display: flex;
   gap: 1rem;
-  justify-content: center;
-  margin: 1.5rem 0;
+  margin-top: 1rem;
 }
 
-button {
-  background-color: #1ca7e8;
-  color: white;
-  padding: 12px 24px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: all 0.3s ease;
-  min-width: 120px;
+.result-controls button {
+  background-color: #007bff;
+  padding: 8px 16px;
+  font-size: 14px;
 }
 
-button:hover:not(:disabled) {
-  background-color: #0074aa;
-  transform: translateY(-1px);
+.result-controls button:hover:not(:disabled) {
+  background-color: #0056b3;
 }
 
-button:disabled {
-  background-color: #cccccc;
-  cursor: not-allowed;
-  opacity: 0.7;
-}
-
-.result {
+/* History Section */
+.history {
   margin-top: 2rem;
   padding: 1rem;
-  border-top: 2px solid #eee;
+  background: #f9f9f9;
+  border-radius: 8px;
 }
 
-.result textarea {
-  direction: inherit;
-  text-align: inherit;
-  transition: all 0.3s ease;
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
 }
 
-.error {
-  color: #dc3545;
+.history-item {
   padding: 1rem;
-  background-color: #f8d7da;
+  margin: 0.5rem 0;
+  background: white;
   border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.history-item .source {
+  color: #666;
+  margin-bottom: 0.5rem;
+}
+
+.history-item .translation {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.history-item .meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8em;
+  color: #999;
+}
+
+/* Notifications */
+.notification {
+  padding: 10px;
   margin: 1rem auto;
   max-width: 90%;
+  border-radius: 4px;
+  background: #e8f4ff;
+  color: #004085;
 }
 
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  border: 0;
+.notification.error {
+  background: #f8d7da;
+  color: #721c24;
 }
 
-@media (max-width: 600px) {
-  .app {
-    padding: 10px;
+/* Loading Animation */
+.loading {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #fff;
+  animation: spin 1s ease-in-out infinite;
+  margin-left: 8px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .history {
+    background: #2d2d2d;
   }
 
-  textarea {
-    width: 95%;
-    font-size: 14px;
+  .history-item {
+    background: #333;
+    color: white;
   }
 
-  .controls {
-    flex-direction: column;
+  .history-item .source {
+    color: #ccc;
   }
 
-  button {
-    width: 100%;
+  .language-selector select {
+    background: #333;
+    color: white;
+    border-color: #555;
   }
 }
