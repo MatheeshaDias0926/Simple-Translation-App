@@ -18,7 +18,7 @@ Installation
 1. Clone the repository
    To get started with the app, clone the repository to your local machine:
 
-git clone https://github.com/yourusername/simple-translation-app.git 2. Install Dependencies
+git clone https://github.com/MatheeshaDias0926/Simple-Translation-App.git 2. Install Dependencies
 Navigate to the project directory and install the necessary dependencies:
 
 cd simple-translation-app
