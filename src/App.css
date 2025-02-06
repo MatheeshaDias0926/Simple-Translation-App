@@ -1,97 +1,90 @@
-/* Add these to your existing App.css */
-
-/* Language Selector */
-.language-selector select {
-  padding: 8px 12px;
-  font-size: 16px;
-  border-radius: 4px;
-  background: #f8f8f8;
-  border: 1px solid #ddd;
-  margin: 10px 0;
-}
-
-/* Result Controls */
-.result-controls {
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f4f4;
+  color: #333;
+  margin: 0;
+  padding: 0;
   display: flex;
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-.result-controls button {
-  background-color: #007bff;
-  padding: 8px 16px;
-  font-size: 14px;
-}
-
-.result-controls button:hover:not(:disabled) {
-  background-color: #0056b3;
-}
-
-/* History Section */
-.history {
-  margin-top: 2rem;
-  padding: 1rem;
-  background: #f9f9f9;
-  border-radius: 8px;
-}
-
-.history-header {
-  display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+  min-height: 100vh;
+}
+
+.app {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+}
+
+h1 {
+  font-size: 1.5rem;
   margin-bottom: 1rem;
 }
 
-.history-item {
+select,
+textarea,
+button {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 1rem;
+}
+
+button {
+  background: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+button:hover {
+  background: #0056b3;
+}
+
+textarea {
+  min-height: 80px;
+  resize: none;
+}
+
+.result {
+  background: #f9f9f9;
   padding: 1rem;
-  margin: 0.5rem 0;
-  background: white;
-  border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  margin-top: 1rem;
 }
 
-.history-item .source {
-  color: #666;
-  margin-bottom: 0.5rem;
+.history-item {
+  background: rgb(15, 15, 189);
+  padding: 10px;
+  margin-top: 8px;
+  border-radius: 6px;
+  font-size: 0.9rem;
 }
 
-.history-item .translation {
-  font-weight: bold;
-  margin-bottom: 0.5rem;
-}
-
-.history-item .meta {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.8em;
-  color: #999;
-}
-
-/* Notifications */
 .notification {
   padding: 10px;
-  margin: 1rem auto;
-  max-width: 90%;
-  border-radius: 4px;
-  background: #e8f4ff;
-  color: #004085;
+  margin: 10px 0;
+  border-radius: 6px;
+  background: #e3fcef;
+  color: #155724;
+  font-size: 0.9rem;
 }
 
-.notification.error {
-  background: #f8d7da;
-  color: #721c24;
-}
-
-/* Loading Animation */
 .loading {
   display: inline-block;
   width: 20px;
   height: 20px;
   border: 3px solid rgba(255, 255, 255, 0.3);
   border-radius: 50%;
-  border-top-color: #fff;
-  animation: spin 1s ease-in-out infinite;
-  margin-left: 8px;
+  border-top-color: white;
+  animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
@@ -100,24 +93,19 @@
   }
 }
 
-/* Dark Mode Support */
 @media (prefers-color-scheme: dark) {
-  .history {
-    background: #2d2d2d;
+  body {
+    background: #222;
+    color: white;
   }
-
-  .history-item {
+  .app {
     background: #333;
     color: white;
   }
-
-  .history-item .source {
-    color: #ccc;
+  button {
+    background: #008cff;
   }
-
-  .language-selector select {
-    background: #333;
-    color: white;
-    border-color: #555;
+  button:hover {
+    background: #005bb5;
   }
 }

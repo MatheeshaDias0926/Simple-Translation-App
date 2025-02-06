@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import "./App.css";
 
@@ -8,32 +8,8 @@ function App() {
   const [error, setError] = useState("");
   const [isRtl, setIsRtl] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [languages, setLanguages] = useState([]);
-  const [targetLanguage, setTargetLanguage] = useState("en");
-  const [translationHistory, setTranslationHistory] = useState([]);
-  const [showNotification, setShowNotification] = useState("");
 
   const apiKey = process.env.REACT_APP_GOOGLE_TRANSLATE_API_KEY;
-
-  // Fetch supported languages on component mount
-  useEffect(() => {
-    const fetchLanguages = async () => {
-      try {
-        const response = await axios.get(
-          `https://translation.googleapis.com/language/translate/v2/languages?key=${apiKey}&target=en`
-        );
-        setLanguages(response.data.data.languages);
-      } catch (error) {
-        console.error("Error fetching languages:", error);
-      }
-    };
-
-    // Load translation history from localStorage
-    const savedHistory = localStorage.getItem("translationHistory");
-    if (savedHistory) setTranslationHistory(JSON.parse(savedHistory));
-
-    if (apiKey) fetchLanguages();
-  }, [apiKey]);
 
   const handleTranslate = async () => {
     const textToTranslate = inputText.trim();
@@ -45,6 +21,11 @@ function App() {
       return;
     }
 
+    if (!apiKey) {
+      setError("API configuration error. Please try again later.");
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -52,34 +33,18 @@ function App() {
         `https://translation.googleapis.com/language/translate/v2?key=${apiKey}`,
         {
           q: textToTranslate,
-          target: targetLanguage,
+          target: "en",
           format: "text",
         }
       );
 
       const translationData = response.data?.data?.translations?.[0];
-      if (!translationData) throw new Error("Invalid response structure");
-
-      const newTranslation = {
-        source: textToTranslate,
-        translation: translationData.translatedText,
-        language: targetLanguage,
-        timestamp: new Date().toISOString(),
-      };
+      if (!translationData) {
+        throw new Error("Invalid response structure");
+      }
 
       setTranslatedText(translationData.translatedText);
-      setIsRtl(false);
-
-      // Update translation history
-      const updatedHistory = [
-        newTranslation,
-        ...translationHistory.slice(0, 4),
-      ];
-      setTranslationHistory(updatedHistory);
-      localStorage.setItem(
-        "translationHistory",
-        JSON.stringify(updatedHistory)
-      );
+      setIsRtl(false); // Reset to LTR for English translations
     } catch (error) {
       console.error("Translation Error:", error);
       setError(
@@ -91,58 +56,19 @@ function App() {
     }
   };
 
-  const copyToClipboard = async () => {
-    try {
-      await navigator.clipboard.writeText(translatedText);
-      showTemporaryNotification("Copied to clipboard!");
-    } catch (error) {
-      showTemporaryNotification("Failed to copy");
-    }
-  };
-
-  const speakText = () => {
-    if ("speechSynthesis" in window) {
-      const utterance = new SpeechSynthesisUtterance(translatedText);
-      utterance.lang = targetLanguage;
-      speechSynthesis.speak(utterance);
-    } else {
-      showTemporaryNotification("Text-to-speech not supported in this browser");
-    }
-  };
-
-  const showTemporaryNotification = (message) => {
-    setShowNotification(message);
-    setTimeout(() => setShowNotification(""), 2000);
-  };
-
   const toggleDirection = () => {
     setIsRtl(!isRtl);
   };
 
-  const clearHistory = () => {
-    setTranslationHistory([]);
-    localStorage.removeItem("translationHistory");
-  };
-
   return (
     <div className="app">
-      <h1>Advanced Translation App</h1>
+      <h1>Simple Translation App</h1>
 
-      <div className="language-selector">
-        <select
-          value={targetLanguage}
-          onChange={(e) => setTargetLanguage(e.target.value)}
-          disabled={isLoading}
-        >
-          {languages.map((lang) => (
-            <option key={lang.language} value={lang.language}>
-              {lang.name}
-            </option>
-          ))}
-        </select>
-      </div>
-
+      <label htmlFor="input-text" className="sr-only">
+        Enter text to translate
+      </label>
       <textarea
+        id="input-text"
         value={inputText}
         onChange={(e) => setInputText(e.target.value)}
         placeholder="Enter text to translate..."
@@ -154,14 +80,7 @@ function App() {
           onClick={handleTranslate}
           disabled={isLoading || !inputText.trim()}
         >
-          {isLoading ? (
-            <>
-              Translating...
-              <div className="loading"></div>
-            </>
-          ) : (
-            "Translate"
-          )}
+          {isLoading ? "Translating..." : "Translate"}
         </button>
 
         <button onClick={toggleDirection} disabled={!translatedText}>
@@ -169,42 +88,17 @@ function App() {
         </button>
       </div>
 
-      {error && <div className="notification error">{error}</div>}
-      {showNotification && (
-        <div className="notification">{showNotification}</div>
-      )}
+      {error && <p className="error">{error}</p>}
 
       {translatedText && (
-        <div className="result">
+        <div className="result" style={{ direction: isRtl ? "rtl" : "ltr" }}>
           <h3>Translated Text:</h3>
           <textarea
             readOnly
             value={translatedText}
+            aria-label="Translated text"
             style={{ direction: isRtl ? "rtl" : "ltr" }}
           />
-          <div className="result-controls">
-            <button onClick={copyToClipboard}>Copy</button>
-            <button onClick={speakText}>Speak</button>
-          </div>
-        </div>
-      )}
-
-      {translationHistory.length > 0 && (
-        <div className="history">
-          <div className="history-header">
-            <h3>Translation History</h3>
-            <button onClick={clearHistory}>Clear History</button>
-          </div>
-          {translationHistory.map((item, index) => (
-            <div key={index} className="history-item">
-              <p className="source">{item.source}</p>
-              <p className="translation">{item.translation}</p>
-              <div className="meta">
-                <span>{new Date(item.timestamp).toLocaleString()}</span>
-                <span>{item.language.toUpperCase()}</span>
-              </div>
-            </div>
-          ))}
         </div>
       )}
     </div>
